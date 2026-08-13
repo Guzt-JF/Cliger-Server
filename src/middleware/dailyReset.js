@@ -1,5 +1,5 @@
 const sequelize = require('../config/database');
-const SystemState = require('../models/SystemState');
+const SystemState = require('../models/systemState');
 const generatePreLoadToken = require('../utils/generatePreLoadToken');
 const getToday = require('../utils/getTotal');
 const bcrypt = require('bcryptjs');
