@@ -25,7 +25,7 @@ router.post('/register', AdjustTime, async (req, res) => {
         });
         if (!resp) {
           res
-            .status(400)
+            .status(200)
             .send({ Error: 'Não foi possível criar o agendamento' });
         }
       }
@@ -161,7 +161,7 @@ router.post('/delete/One', async (req, res) => {
         res.status(200).send({ message: 'Agendamento excluído com sucesso' });
       } else {
         res
-          .status(400)
+          .status(200)
           .send({ Error: 'Não foi possível excluir o agendamento' });
       }
     }
@@ -204,7 +204,7 @@ router.delete('/delete/EntireDay', async (req, res) => {
         res.status(200).send({ message: 'Registros excluídos com sucesso' });
       } else {
         res
-          .status(400)
+          .status(200)
           .send({ message: 'Não foi possível excluir os registros' });
       }
     }

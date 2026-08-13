@@ -22,7 +22,7 @@ router.use(cors());
 router.post('/register', emailFilter, async (req, res) => {
   try {
     if (process.env.STAGE === 'demo') {
-      res.status(401).send({
+      res.status(200).send({
         Error: 'Cadastro Não permitido em demonstração',
       });
       return;
@@ -55,7 +55,7 @@ router.post('/authenticate', async (req, res) => {
   try {
     let Email = req.body.Email;
     if (process.env.STAGE === 'demo' && Email !== 'mail@test.com') {
-      res.status(401).send({ Error: 'E-Mail não permitido em demonstração' });
+      res.status(200).send({ Error: 'E-Mail não permitido em demonstração' });
       return;
     }
 
@@ -75,11 +75,11 @@ router.post('/authenticate', async (req, res) => {
             ConfirmToken: result.ConfirmToken,
           });
         } else {
-          res.status(400).send({ Error: 'Senha Errada' });
+          res.status(200).send({ Error: 'Senha Errada' });
         }
       });
     } else {
-      res.status(400).send({ Error: 'E-Mail Errado' });
+      res.status(200).send({ Error: 'E-Mail Errado' });
     }
   } catch (err) {
     console.error(err);
@@ -100,7 +100,7 @@ router.post('/GetUserByToken', async (req, res) => {
           result.ConfirmToken = generatePreLoadToken();
           await result.save();
         }
-        res.status(401).send({ Error: 'Token inválido' });
+        res.status(200).send({ Error: 'Token inválido' });
         return;
       }
 
@@ -115,7 +115,7 @@ router.post('/GetUserByToken', async (req, res) => {
           result.Email !== 'test-mail@mail.com'
         ) {
           res
-            .status(401)
+            .status(200)
             .send({ Error: 'usuário não permitido em demonstração' });
         }
 
@@ -138,7 +138,7 @@ router.post('/GetUserByToken', async (req, res) => {
 router.post('/delete/User', async (req, res) => {
   try {
     if (process.env.STAGE === 'demo') {
-      res.status(401).send({
+      res.status(200).send({
         Error: 'Não é permitido deletar em demonstração',
       });
       return;
@@ -170,7 +170,7 @@ router.post('/delete/User', async (req, res) => {
       });
       res.status(200).send({ message: 'Usuário deletado' });
     } else {
-      res.status(400).send({ Error: 'Email Errado' });
+      res.status(200).send({ Error: 'Email Errado' });
     }
   } catch (err) {
     res.status(400).send({ Error: 'Falha na operação' });
@@ -180,7 +180,7 @@ router.post('/delete/User', async (req, res) => {
 router.put('/update', async (req, res) => {
   try {
     if (process.env.STAGE === 'demo') {
-      res.status(401).send({
+      res.status(200).send({
         Error: 'Não é permitido atualizar em demonstração',
       });
       return;
@@ -219,7 +219,7 @@ router.post('/forgotPass', async (req, res) => {
       !process.env.MAILPASS
     ) {
       res
-        .status(400)
+        .status(200)
         .send({ Error: 'Configurações de email não configuradas' });
       return;
     }
@@ -230,7 +230,7 @@ router.post('/forgotPass', async (req, res) => {
       },
     });
     if (!result) {
-      res.status(400).send({ Error: 'Email Não existe' });
+      res.status(200).send({ Error: 'Email Não existe' });
       return;
     }
 
@@ -259,7 +259,7 @@ router.post('/forgotPass', async (req, res) => {
     transporter.sendMail(message, (err, info) => {
       if (err) {
         console.log(`Error occurred. ${err.message}`);
-        res.status(400).send({ Error: 'Email não Enviado' });
+        res.status(200).send({ Error: 'Email não Enviado' });
       } else {
         console.log(`Message sent:, ${info.messageId}`);
         res.status(200).send({ message: 'Email Enviado' });
@@ -284,9 +284,9 @@ router.post('/ConfirmToken', async (req, res) => {
           res.status(200).send({ message: 'Código confirmado' });
         } else if (err) {
           // console.error(err)
-          res.status(400).send({ Error: 'Código Invalido' });
+          res.status(200).send({ Error: 'Código Invalido' });
         } else {
-          res.status(400).send({ Error: 'Código Errado' });
+          res.status(200).send({ Error: 'Código Errado' });
         }
       });
     }
@@ -301,7 +301,7 @@ router.post('/ConfirmToken', async (req, res) => {
 router.post('/ChangePass', async (req, res) => {
   try {
     if (process.env.STAGE === 'demo') {
-      res.status(401).send({
+      res.status(200).send({
         Error: 'Não é permitido alterar a senha em demonstração',
       });
       return;
@@ -322,7 +322,7 @@ router.post('/ChangePass', async (req, res) => {
         }
       });
     } else {
-      res.status(400).send({ Error: 'Email ou Token é inválido' });
+      res.status(200).send({ Error: 'Email ou Token é inválido' });
     }
   } catch (err) {
     // console.error(err)
