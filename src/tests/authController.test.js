@@ -3,7 +3,7 @@ const GenerateConfirmToken = require('../middleware/generateToken');
 const App = require('../app');
 const request = require('supertest');
 
-describe("Testes de Autenticação", () => {
+describe('Testes de Autenticação', () => {
   //TESTES DE UNIDADE
   it('Testando a geração de token', async () => {
     let Token = GenerateConfirmToken();

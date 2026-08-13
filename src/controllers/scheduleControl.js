@@ -24,7 +24,9 @@ router.post('/register', AdjustTime, async (req, res) => {
           ProSerId: req.body.ProSerId[x],
         });
         if (!resp) {
-          res.status(400).send({ Error: 'Não foi possível criar o agendamento' });
+          res
+            .status(400)
+            .send({ Error: 'Não foi possível criar o agendamento' });
         }
       }
 
@@ -75,10 +77,12 @@ router.post('/getOne', async (req, res) => {
         res.json(DataEnd);
       }
     } else {
-      res.status(404).send({ message: 'Não foi possível encontrar registros para este horário' });
+      res.status(404).send({
+        message: 'Não foi possível encontrar registros para este horário',
+      });
     }
   } catch (err) {
-    res.status(400).send({ Error: "Não foi possível obter os dados" });
+    res.status(400).send({ Error: 'Não foi possível obter os dados' });
   }
 });
 
@@ -130,7 +134,7 @@ router.post('/getAllFromDay', async (req, res) => {
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Não foi possível obter os dados" });
+    res.status(400).send({ Error: 'Não foi possível obter os dados' });
   }
 });
 
@@ -156,12 +160,14 @@ router.post('/delete/One', async (req, res) => {
       if (del) {
         res.status(200).send({ message: 'Agendamento excluído com sucesso' });
       } else {
-        res.status(400).send({ Error: 'Não foi possível excluir o agendamento' });
+        res
+          .status(400)
+          .send({ Error: 'Não foi possível excluir o agendamento' });
       }
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Não foi possível excluir o agendamento" });
+    res.status(400).send({ Error: 'Não foi possível excluir o agendamento' });
   }
 });
 
@@ -197,7 +203,9 @@ router.delete('/delete/EntireDay', async (req, res) => {
       if (del) {
         res.status(200).send({ message: 'Registros excluídos com sucesso' });
       } else {
-        res.status(400).send({ message: 'Não foi possível excluir os registros' });
+        res
+          .status(400)
+          .send({ message: 'Não foi possível excluir os registros' });
       }
     }
   } catch (err) {
@@ -230,7 +238,7 @@ router.put('/update', AdjustTime, async (req, res) => {
         });
         if (resp) {
           if (req.body.ProSerIdNew == '' || req.body.ProSerIdNew == null) {
-            notFound = " Produto selecionado, porém não encontrado";
+            notFound = ' Produto selecionado, porém não encontrado';
           } else {
             resp.ProSerId = req.body.ProSerIdNew;
             await resp.save();
@@ -245,11 +253,13 @@ router.put('/update', AdjustTime, async (req, res) => {
           await result.save();
         }
       }
-      res.status(200).send({ message: 'Valores alterados com sucesso' + notFound });
+      res
+        .status(200)
+        .send({ message: 'Valores alterados com sucesso' + notFound });
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Não foi possível atualizar o agendamento" });
+    res.status(400).send({ Error: 'Não foi possível atualizar o agendamento' });
   }
 });
 

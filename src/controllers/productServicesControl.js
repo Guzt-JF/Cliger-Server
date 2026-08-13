@@ -26,7 +26,8 @@ router.post('/New', async (req, res) => {
     }
   } catch (err) {
     res.status(400).send({
-      error: "Não foi possível registrar o produto, verifique se todos os campos estão preenchidos",
+      error:
+        'Não foi possível registrar o produto, verifique se todos os campos estão preenchidos',
     });
   }
 });
@@ -86,7 +87,7 @@ router.post('/GetOne', async (req, res) => {
       res.status(200).send(result);
     }
   } catch (err) {
-    res.status(400).send({ error: "Não foi possível obter os dados" });
+    res.status(400).send({ error: 'Não foi possível obter os dados' });
   }
 });
 
@@ -99,7 +100,15 @@ router.post('/Update', async (req, res) => {
     });
     if (result) {
       const obj = {
-        vars: ["Code", "Name", "Description", "Type", "Value", "TotalAmount", "UnitCost"]
+        vars: [
+          'Code',
+          'Name',
+          'Description',
+          'Type',
+          'Value',
+          'TotalAmount',
+          'UnitCost',
+        ],
       };
 
       for (var x = 0; x < obj.vars.length; x++) {
@@ -116,7 +125,9 @@ router.post('/Update', async (req, res) => {
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Não foi possível atualizar o produto/serviço" });
+    res
+      .status(400)
+      .send({ error: 'Não foi possível atualizar o produto/serviço' });
   }
 });
 
@@ -141,7 +152,9 @@ router.post('/deleteOne', async (req, res) => {
     res.status(200).send({ message: 'Produto/Serviço excluído com sucesso' });
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Não foi possível excluir o produto/serviço" });
+    res
+      .status(400)
+      .send({ error: 'Não foi possível excluir o produto/serviço' });
   }
 });
 

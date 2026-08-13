@@ -12,8 +12,8 @@ const db = new Sequelize(
     dialect: 'mysql',
     timezone: '-03:00',
     ssl: {
-      ca: [process.env.DB_CA_CERT.replace(/\\n/g, '\n')]
-    }
+      ca: [process.env.DB_CA_CERT.replace(/\\n/g, '\n')],
+    },
   }
 );
 

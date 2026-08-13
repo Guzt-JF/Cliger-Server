@@ -77,7 +77,7 @@ router.post('/GetAll', async (req, res) => {
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Não foi possível obter os dados" });
+    res.status(400).send({ error: 'Não foi possível obter os dados' });
   }
 });
 
@@ -117,7 +117,7 @@ router.post('/GetOneProduct', async (req, res) => {
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Não foi possível obter os dados" });
+    res.status(400).send({ error: 'Não foi possível obter os dados' });
   }
 });
 

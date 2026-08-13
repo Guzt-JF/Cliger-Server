@@ -15,24 +15,19 @@ const productSchedule = require('../models/mtm/productSchedule');
 const GenerateConfirmToken = require('../middleware/generateToken');
 const transporter = require('../modules/mail');
 const emailFilter = require('../middleware/filter');
-
-function GeneratePreLoadToken(params = {}) {
-  return jwt.sign(params, process.env.SECRET, {
-    expiresIn: 60 * 60 * 24,
-  });
-}
+const generatePreLoadToken = require('../utils/generatePreLoadToken');
 
 router.use(cors());
 
 router.post('/register', emailFilter, async (req, res) => {
   try {
-    if(process.env.STAGE === 'demo' ) {
+    if (process.env.STAGE === 'demo') {
       res.status(401).send({
         Error: 'Cadastro Não permitido em demonstração',
       });
       return;
     }
-    const Token = GeneratePreLoadToken();
+    const Token = generatePreLoadToken();
     bcrypt.hash(req.body.Password, 10, async (err, hash) => {
       const result = await User.create({
         UserName: req.body.UserName,
@@ -59,8 +54,9 @@ router.post('/register', emailFilter, async (req, res) => {
 router.post('/authenticate', async (req, res) => {
   try {
     let Email = req.body.Email;
-    if(process.env.STAGE === 'demo' && Email !== 'test-mail@mail.com') {
+    if (process.env.STAGE === 'demo' && Email !== 'test-mail@mail.com') {
       res.status(401).send({ Error: 'E-Mail não permitido em demonstração' });
+      return;
     }
 
     const result = await User.findOne({
@@ -86,7 +82,7 @@ router.post('/authenticate', async (req, res) => {
       res.status(400).send({ Error: 'E-Mail Errado' });
     }
   } catch (err) {
-    console.error(err)
+    console.error(err);
     res.status(400).send({ Error: 'Autenticação falha' });
   }
 });
@@ -101,21 +97,26 @@ router.post('/GetUserByToken', async (req, res) => {
           },
         });
         if (result) {
-          result.ConfirmToken = GeneratePreLoadToken();
+          result.ConfirmToken = generatePreLoadToken();
           await result.save();
         }
         res.status(401).send({ Error: 'Token inválido' });
         return;
       }
-      
+
       const result = await User.findOne({
         where: {
           ConfirmToken: req.body.ConfirmToken,
         },
       });
       if (result) {
-        if(process.env.STAGE === 'demo' && result.Email !== 'test-mail@mail.com') {
-          res.status(401).send({ Error: 'usuário não permitido em demonstração' });
+        if (
+          process.env.STAGE === 'demo' &&
+          result.Email !== 'test-mail@mail.com'
+        ) {
+          res
+            .status(401)
+            .send({ Error: 'usuário não permitido em demonstração' });
         }
 
         res.status(200).send({
@@ -136,7 +137,7 @@ router.post('/GetUserByToken', async (req, res) => {
 
 router.post('/delete/User', async (req, res) => {
   try {
-    if(process.env.STAGE === 'demo' ) {
+    if (process.env.STAGE === 'demo') {
       res.status(401).send({
         Error: 'Não é permitido deletar em demonstração',
       });
@@ -178,7 +179,7 @@ router.post('/delete/User', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   try {
-    if(process.env.STAGE === 'demo' ) {
+    if (process.env.STAGE === 'demo') {
       res.status(401).send({
         Error: 'Não é permitido atualizar em demonstração',
       });
@@ -210,9 +211,16 @@ router.put('/update', async (req, res) => {
 router.post('/forgotPass', async (req, res) => {
   try {
     let Token = GenerateConfirmToken();
-    
-    if(!process.env.OAUTH_CLIENTID || !process.env.OAUTH_CLIENT_SECRET || !process.env.OAUTH_REFRESH_TOKEN || !process.env.MAILPASS) {
-      res.status(400).send({ Error: 'Configurações de email não configuradas' });
+
+    if (
+      !process.env.OAUTH_CLIENTID ||
+      !process.env.OAUTH_CLIENT_SECRET ||
+      !process.env.OAUTH_REFRESH_TOKEN ||
+      !process.env.MAILPASS
+    ) {
+      res
+        .status(400)
+        .send({ Error: 'Configurações de email não configuradas' });
       return;
     }
 
@@ -225,7 +233,7 @@ router.post('/forgotPass', async (req, res) => {
       res.status(400).send({ Error: 'Email Não existe' });
       return;
     }
-    
+
     bcrypt.hash(Token, 10, async (err, hash) => {
       result.ResetToken = hash;
       await result.save();
@@ -292,7 +300,7 @@ router.post('/ConfirmToken', async (req, res) => {
 
 router.post('/ChangePass', async (req, res) => {
   try {
-    if(process.env.STAGE === 'demo' ) {
+    if (process.env.STAGE === 'demo') {
       res.status(401).send({
         Error: 'Não é permitido alterar a senha em demonstração',
       });

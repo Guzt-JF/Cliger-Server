@@ -15,7 +15,7 @@ let day = getRandomInt(10, 28);
 let ScheduledHour = `${Hour}:${Minute}0`;
 let ScheduledDay = `20${Year}-04-${day}`;
 
-describe("Testes de Agendamento", () => {
+describe('Testes de Agendamento', () => {
   it('Deve Criar um Novo Registro', async () => {
     const result = await request(App)
       .post('/schedule/register')
@@ -37,7 +37,7 @@ describe("Testes de Agendamento", () => {
     });
     expect(
       result.body.message != 'Não foi possível encontrar o registro' ||
-        result.body.Error != "Não foi possível obter os dados"
+        result.body.Error != 'Não foi possível obter os dados'
     ).toBeTruthy();
   });
 
@@ -46,7 +46,7 @@ describe("Testes de Agendamento", () => {
       ScheduledDay: ScheduledDay,
       userId: 1,
     });
-    expect(result.body.Error != "Não foi possível obter os dados").toBeTruthy();
+    expect(result.body.Error != 'Não foi possível obter os dados').toBeTruthy();
   });
 
   it('Deve Deletar Este Registro', async () => {
