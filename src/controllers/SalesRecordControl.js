@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const cors = require('cors');
 
-const SalesRecord = require('../models/SalesRecord');
-const ProductSales = require('../models/ManyToMany_Models/ProductSales');
+const SalesRecord = require('../models/salesRecord');
+const ProductSales = require('../models/mtm/productSales');
 
 router.use(cors());
 

@@ -4,8 +4,8 @@ const cors = require('cors');
 const { Op } = require('sequelize');
 
 const ProSer = require('../models/product');
-const ProductSales = require('../models/ManyToMany_Models/ProductSales');
-const ProductSchedule = require('../models/ManyToMany_Models/ProductSchedule');
+const ProductSales = require('../models/mtm/productSales');
+const ProductSchedule = require('../models/mtm/productSchedule');
 
 router.use(cors());
 

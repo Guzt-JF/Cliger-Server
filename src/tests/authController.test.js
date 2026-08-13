@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const GenerateConfirmToken = require('../middleware/GenerateToken');
+const GenerateConfirmToken = require('../middleware/generateToken');
 const App = require('../app');
 const request = require('supertest');
 

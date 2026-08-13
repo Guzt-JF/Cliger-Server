@@ -9,10 +9,10 @@ require('dotenv-safe').config();
 
 const User = require('../models/user');
 const Product = require('../models/product');
-const ProductSales = require('../models/ManyToMany_Models/ProductSales');
-const productSchedule = require('../models/ManyToMany_Models/ProductSchedule');
+const ProductSales = require('../models/mtm/productSales');
+const productSchedule = require('../models/mtm/productSchedule');
 
-const GenerateConfirmToken = require('../middleware/GenerateToken');
+const GenerateConfirmToken = require('../middleware/generateToken');
 const transporter = require('../modules/mail');
 const emailFilter = require('../middleware/filter');
 
