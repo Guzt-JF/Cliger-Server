@@ -54,7 +54,7 @@ router.post('/register', emailFilter, async (req, res) => {
 router.post('/authenticate', async (req, res) => {
   try {
     let Email = req.body.Email;
-    if (process.env.STAGE === 'demo' && Email !== 'test-mail@mail.com') {
+    if (process.env.STAGE === 'demo' && Email !== 'mail@test.com') {
       res.status(401).send({ Error: 'E-Mail não permitido em demonstração' });
       return;
     }
