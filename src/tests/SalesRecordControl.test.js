@@ -1,8 +1,8 @@
 const App = require('../app');
 const request = require('supertest');
 
-describe('Sales Record Tests', () => {
-  it('Should Create a New Record', async () => {
+describe('Testes de gravação de vendas', () => {
+  it('Deve Criar um Novo Registro', async () => {
     const result = await request(App)
       .post('/SalesRecord/newRecord')
       .send({
@@ -14,16 +14,16 @@ describe('Sales Record Tests', () => {
         Amount: [1],
         Weight: [1],
       });
-    expect(result.body.message).toBe('Success on Create');
+    expect(result.body.message).toBe('Sucesso ao criar registro');
   });
 
-  it('Should Find One Record', async () => {
-    const result = await request(App).post('/SalesRecord/getOne').send({
+  it('Deve Encontrar Um Registro', async () => {
+    const result = await request(App).post('/SalesRecord/GetOneProduct').send({
       id: 1,
       userId: 1,
     });
     expect(
-      result.body.message != 'Cannot Find any register at this time'
+      result.body.message != 'Não foi possível obter os dados'
     ).toBeTruthy();
   });
 });

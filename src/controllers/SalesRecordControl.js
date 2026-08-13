@@ -24,10 +24,10 @@ router.post('/newRecord', async (req, res) => {
           Weight: req.body.Weight[x],
         });
       }
-      res.json({ message: 'Success on Create' });
+      res.status(200).send({ message: 'Sucesso ao registrar venda' });
     }
   } catch (err) {
-    res.status(400).send({ error: 'Could not Create' });
+    res.status(400).send({ error: 'Não foi possível registrar a venda' });
   }
 });
 
@@ -73,11 +73,11 @@ router.post('/GetAll', async (req, res) => {
         })
       );
 
-      res.json(FinalData);
+      res.status(200).send(FinalData);
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Couldn't Get the Data" });
+    res.status(400).send({ error: "Não foi possível obter os dados" });
   }
 });
 
@@ -110,14 +110,14 @@ router.post('/GetOneProduct', async (req, res) => {
 
           return { SalesId, ProductId, Amount, Weight, createdAt };
         });
-        res.json(Data);
+        res.status(200).send(Data);
       }
     } else {
-      res.json({ error: 'Not Found' });
+      res.status(404).send({ error: 'Não encontrado' });
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Couldn't Get the Data" });
+    res.status(400).send({ error: "Não foi possível obter os dados" });
   }
 });
 

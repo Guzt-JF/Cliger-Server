@@ -26,6 +26,12 @@ router.use(cors());
 
 router.post('/register', emailFilter, async (req, res) => {
   try {
+    if(process.env.STAGE === 'demo' ) {
+      res.status(401).send({
+        Error: 'Cadastro Não permitido em demonstração',
+      });
+      return;
+    }
     const Token = GeneratePreLoadToken();
     bcrypt.hash(req.body.Password, 10, async (err, hash) => {
       const result = await User.create({
@@ -38,7 +44,7 @@ router.post('/register', emailFilter, async (req, res) => {
         ConfirmToken: Token,
       });
       if (result) {
-        res.json({
+        res.status(200).send({
           message: 'Cadastro bem-sucedido',
           ConfirmToken: Token,
           Id: result.id,
@@ -52,15 +58,18 @@ router.post('/register', emailFilter, async (req, res) => {
 
 router.post('/authenticate', async (req, res) => {
   try {
+    let Email = req.body.Email;
+    if(process.env.STAGE === 'demo' && Email !== 'test-mail@mail.com') {
+      res.status(401).send({ Error: 'E-Mail não permitido em demonstração' });
+    }
+
     const result = await User.findOne({
-      where: {
-        Email: req.body.Email,
-      },
+      where: { Email },
     });
     if (result) {
       bcrypt.compare(req.body.Password, result.Password, async (err, resp) => {
         if (resp) {
-          res.json({
+          res.status(200).send({
             message: 'Sucesso no Login',
             id: result.id,
             UserName: result.UserName,
@@ -70,14 +79,14 @@ router.post('/authenticate', async (req, res) => {
             ConfirmToken: result.ConfirmToken,
           });
         } else {
-          res.json({ Error: 'Senha Errada' });
+          res.status(400).send({ Error: 'Senha Errada' });
         }
       });
     } else {
-      res.json({ Error: 'E-Mail Errado' });
+      res.status(400).send({ Error: 'E-Mail Errado' });
     }
   } catch (err) {
-    // console.error(err)
+    console.error(err)
     res.status(400).send({ Error: 'Autenticação falha' });
   }
 });
@@ -95,34 +104,45 @@ router.post('/GetUserByToken', async (req, res) => {
           result.ConfirmToken = GeneratePreLoadToken();
           await result.save();
         }
-        res.json({ Error: 'Not Valid Token' });
+        res.status(401).send({ Error: 'Token inválido' });
+        return;
       }
-      if (!err) {
-        const result = await User.findOne({
-          where: {
-            ConfirmToken: req.body.ConfirmToken,
-          },
-        });
-        if (result) {
-          res.json({
-            message: 'Sucesso no Login',
-            id: result.id,
-            UserName: result.UserName,
-            Email: result.Email,
-            BirthDate: result.BirthDate,
-            PhoneNumber: result.PhoneNumber,
-          });
+      
+      const result = await User.findOne({
+        where: {
+          ConfirmToken: req.body.ConfirmToken,
+        },
+      });
+      if (result) {
+        if(process.env.STAGE === 'demo' && result.Email !== 'test-mail@mail.com') {
+          res.status(401).send({ Error: 'usuário não permitido em demonstração' });
         }
+
+        res.status(200).send({
+          message: 'Sucesso no Login',
+          id: result.id,
+          UserName: result.UserName,
+          Email: result.Email,
+          BirthDate: result.BirthDate,
+          PhoneNumber: result.PhoneNumber,
+        });
       }
     });
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: 'Not Found' });
+    res.status(400).send({ Error: 'Não encontrado' });
   }
 });
 
 router.post('/delete/User', async (req, res) => {
   try {
+    if(process.env.STAGE === 'demo' ) {
+      res.status(401).send({
+        Error: 'Não é permitido deletar em demonstração',
+      });
+      return;
+    }
+
     const result = await User.findOne({
       where: {
         id: req.body.id,
@@ -147,9 +167,9 @@ router.post('/delete/User', async (req, res) => {
           id: result.id,
         },
       });
-      res.json({ message: 'Usuário deletado' });
+      res.status(200).send({ message: 'Usuário deletado' });
     } else {
-      res.json({ Error: 'Email Errado' });
+      res.status(400).send({ Error: 'Email Errado' });
     }
   } catch (err) {
     res.status(400).send({ Error: 'Falha na operação' });
@@ -158,6 +178,12 @@ router.post('/delete/User', async (req, res) => {
 
 router.put('/update', async (req, res) => {
   try {
+    if(process.env.STAGE === 'demo' ) {
+      res.status(401).send({
+        Error: 'Não é permitido atualizar em demonstração',
+      });
+      return;
+    }
     const result = await User.findOne({
       where: {
         id: req.body.id,
@@ -173,7 +199,7 @@ router.put('/update', async (req, res) => {
           result[string] = req.body[string];
           await result.save();
         }
-        res.json({ message: 'Valores Atualizados' });
+        res.status(200).send({ message: 'Valores Atualizados' });
       }
     }
   } catch (err) {
@@ -184,21 +210,26 @@ router.put('/update', async (req, res) => {
 router.post('/forgotPass', async (req, res) => {
   try {
     let Token = GenerateConfirmToken();
+    
+    if(!process.env.OAUTH_CLIENTID || !process.env.OAUTH_CLIENT_SECRET || !process.env.OAUTH_REFRESH_TOKEN || !process.env.MAILPASS) {
+      res.status(400).send({ Error: 'Configurações de email não configuradas' });
+      return;
+    }
 
     const result = await User.findOne({
       where: {
         Email: req.body.Email,
       },
     });
-    if (result) {
-      bcrypt.hash(Token, 10, async (err, hash) => {
-        result.ResetToken = hash;
-        await result.save();
-      });
-    } else {
-      res.json({ Error: 'Email Not Exists' });
+    if (!result) {
+      res.status(400).send({ Error: 'Email Não existe' });
       return;
     }
+    
+    bcrypt.hash(Token, 10, async (err, hash) => {
+      result.ResetToken = hash;
+      await result.save();
+    });
 
     const message = {
       from: '<cligeroficial@gmail.com>',
@@ -220,10 +251,10 @@ router.post('/forgotPass', async (req, res) => {
     transporter.sendMail(message, (err, info) => {
       if (err) {
         console.log(`Error occurred. ${err.message}`);
-        res.json({ Error: 'Email not sent' });
+        res.status(400).send({ Error: 'Email não Enviado' });
       } else {
         console.log(`Message sent:, ${info.messageId}`);
-        res.json({ message: 'Email sent' });
+        res.status(200).send({ message: 'Email Enviado' });
       }
     });
   } catch (err) {
@@ -242,25 +273,31 @@ router.post('/ConfirmToken', async (req, res) => {
     if (result) {
       bcrypt.compare(req.body.Token, result.ResetToken, async (err, resp) => {
         if (resp) {
-          res.json({ message: 'Código confirmado' });
+          res.status(200).send({ message: 'Código confirmado' });
         } else if (err) {
           // console.error(err)
-          res.json({ Error: 'Código Invalido' });
+          res.status(400).send({ Error: 'Código Invalido' });
         } else {
-          res.json({ Error: 'Código Errado' });
+          res.status(400).send({ Error: 'Código Errado' });
         }
       });
     }
   } catch (err) {
     // console.error(err)
     res.status(400).send({
-      Error: 'Cannot confirm Token, try again Later',
+      Error: 'Não foi possivel confirmar o código, tente novamente mais tarde',
     });
   }
 });
 
 router.post('/ChangePass', async (req, res) => {
   try {
+    if(process.env.STAGE === 'demo' ) {
+      res.status(401).send({
+        Error: 'Não é permitido alterar a senha em demonstração',
+      });
+      return;
+    }
     const result = await User.findOne({
       where: {
         Email: req.body.Email,
@@ -272,16 +309,16 @@ router.post('/ChangePass', async (req, res) => {
           bcrypt.hash(req.body.Password, 10, async (err, hash) => {
             (result.Password = hash), (result.ResetToken = '');
             await result.save();
-            res.json({ message: 'Password Changed' });
+            res.status(200).send({ message: 'Senha Alterada com Sucesso' });
           });
         }
       });
     } else {
-      res.json({ Error: 'Email or Token is Invalid' });
+      res.status(400).send({ Error: 'Email ou Token é inválido' });
     }
   } catch (err) {
     // console.error(err)
-    res.json({ Error: 'Cannot change Password' });
+    res.status(400).send({ Error: 'Não foi possível alterar a senha' });
   }
 });
 

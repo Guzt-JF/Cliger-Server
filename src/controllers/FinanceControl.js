@@ -13,10 +13,10 @@ router.post('/register', async (req, res) => {
       userId: req.body.userId,
     });
     if (Result) {
-      res.json({ message: 'Success on Create' });
+      res.status(200).send({ message: 'Sucesso ao criar registro' });
     }
   } catch (err) {
-    res.status(400).send({ error: 'Cannot make a new Record' });
+    res.status(400).send({ error: 'Não foi possível criar o registro' });
   }
 });
 
@@ -44,10 +44,10 @@ router.post('/getAll', async (req, res) => {
 
         return { Id, CurrentBalance, createdAt, userId };
       });
-      res.json(data);
+      res.status(200).send(data);
     }
   } catch (err) {
-    res.status(400).send({ error: "Couldn't Get the Data" });
+    res.status(400).send({ error: 'Não foi possível obter os dados' });
   }
 });
 

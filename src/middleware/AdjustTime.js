@@ -46,7 +46,7 @@ module.exports = async (req, res, next) => {
       hour > 23 ||
       hour < 0
     ) {
-      return res.status(400).send({ error: 'The Number Is Invalid' });
+      return res.status(400).send({ error: 'Hora inválida' });
     } else {
       for (var x = 0; x < data.length; x++) {
         if (data[x].ScheduledHour == Time && data[x].ScheduledDay == Day) {

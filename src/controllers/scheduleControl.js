@@ -24,15 +24,15 @@ router.post('/register', AdjustTime, async (req, res) => {
           ProSerId: req.body.ProSerId[x],
         });
         if (!resp) {
-          res.json({ Error: 'Could not Create' });
+          res.status(400).send({ Error: 'Não foi possível criar o agendamento' });
         }
       }
 
-      res.json({ message: 'Success on Create' });
+      res.status(200).send({ message: 'Agendamento criado com sucesso' });
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: 'Creation Failed' });
+    res.status(400).send({ Error: 'Não foi possível criar o agendamento' });
   }
 });
 
@@ -75,10 +75,10 @@ router.post('/getOne', async (req, res) => {
         res.json(DataEnd);
       }
     } else {
-      res.json({ message: 'Cannot Find any register at this time' });
+      res.status(404).send({ message: 'Não foi possível encontrar registros para este horário' });
     }
   } catch (err) {
-    res.status(400).send({ Error: "Couldn't Get the Data" });
+    res.status(400).send({ Error: "Não foi possível obter os dados" });
   }
 });
 
@@ -130,7 +130,7 @@ router.post('/getAllFromDay', async (req, res) => {
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Couldn't Get the Data" });
+    res.status(400).send({ Error: "Não foi possível obter os dados" });
   }
 });
 
@@ -154,14 +154,14 @@ router.post('/delete/One', async (req, res) => {
         where: { id: find.id },
       });
       if (del) {
-        res.json({ message: 'Schedule deleted' });
+        res.status(200).send({ message: 'Agendamento excluído com sucesso' });
       } else {
-        res.json({ Error: 'Schedule not deleted' });
+        res.status(400).send({ Error: 'Não foi possível excluir o agendamento' });
       }
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Couldn't Delete" });
+    res.status(400).send({ Error: "Não foi possível excluir o agendamento" });
   }
 });
 
@@ -195,13 +195,13 @@ router.delete('/delete/EntireDay', async (req, res) => {
         },
       });
       if (del) {
-        res.json({ message: 'Records Deleted Successfully' });
+        res.status(200).send({ message: 'Registros excluídos com sucesso' });
       } else {
-        res.json({ message: 'Records not Deleted' });
+        res.status(400).send({ message: 'Não foi possível excluir os registros' });
       }
     }
   } catch (err) {
-    res.status(400).send({ Error: 'Records not Deleted' });
+    res.status(400).send({ Error: 'Não foi possível excluir os registros' });
   }
 });
 
@@ -230,7 +230,7 @@ router.put('/update', AdjustTime, async (req, res) => {
         });
         if (resp) {
           if (req.body.ProSerIdNew == '' || req.body.ProSerIdNew == null) {
-            notFound = " Product selected but we didn't find it";
+            notFound = " Produto selecionado, porém não encontrado";
           } else {
             resp.ProSerId = req.body.ProSerIdNew;
             await resp.save();
@@ -245,11 +245,11 @@ router.put('/update', AdjustTime, async (req, res) => {
           await result.save();
         }
       }
-      res.json({ message: 'Values Changed' + notFound });
+      res.status(200).send({ message: 'Valores alterados com sucesso' + notFound });
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ Error: "Couldn't Update the Schedule" });
+    res.status(400).send({ Error: "Não foi possível atualizar o agendamento" });
   }
 });
 

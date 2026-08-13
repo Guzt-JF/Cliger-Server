@@ -22,11 +22,11 @@ router.post('/New', async (req, res) => {
       userId: req.body.userId,
     });
     if (result) {
-      res.json({ message: 'New Product Recoded' });
+      res.status(200).send({ message: 'Produto gravado com sucesso' });
     }
   } catch (err) {
     res.status(400).send({
-      error: "Cannot Register, Check if you don't forget to fill the form",
+      error: "Não foi possível registrar o produto, verifique se todos os campos estão preenchidos",
     });
   }
 });
@@ -41,7 +41,7 @@ router.post('/GetAll', async (req, res) => {
     });
     if (result) {
       if (Object.values(result).length == 0) {
-        res.json({ message: 'Not Found' });
+        res.status(404).send({ message: 'Produto não encontrado' });
       } else {
         const data = result.map(function (item) {
           let id = item.id,
@@ -66,12 +66,12 @@ router.post('/GetAll', async (req, res) => {
             userId,
           };
         });
-        res.json(data);
+        res.status(200).send(data);
       }
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).json({ error: err });
+    res.status(400).send({ error: err });
   }
 });
 
@@ -83,10 +83,10 @@ router.post('/GetOne', async (req, res) => {
       },
     });
     if (result) {
-      res.json(result);
+      res.status(200).send(result);
     }
   } catch (err) {
-    res.status(400).send({ error: "Couldn't Get the Data" });
+    res.status(400).send({ error: "Não foi possível obter os dados" });
   }
 });
 
@@ -98,9 +98,9 @@ router.post('/Update', async (req, res) => {
       },
     });
     if (result) {
-      const Variables =
-        '{"vars":["Code","Name","Description","Type","Value","TotalAmount","UnitCost"]}';
-      const obj = JSON.parse(Variables);
+      const obj = {
+        vars: ["Code", "Name", "Description", "Type", "Value", "TotalAmount", "UnitCost"]
+      };
 
       for (var x = 0; x < obj.vars.length; x++) {
         const str = obj.vars[x];
@@ -112,11 +112,11 @@ router.post('/Update', async (req, res) => {
         }
       }
 
-      res.json({ message: 'Values Changed' });
+      res.status(200).send({ message: 'Valores alterados com sucesso' });
     }
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Couldn't Update the Product/Service" });
+    res.status(400).send({ error: "Não foi possível atualizar o produto/serviço" });
   }
 });
 
@@ -138,10 +138,10 @@ router.post('/deleteOne', async (req, res) => {
       },
     });
 
-    res.json({ message: 'Product/Service deleted Successfully' });
+    res.status(200).send({ message: 'Produto/Serviço excluído com sucesso' });
   } catch (err) {
     // console.error(err)
-    res.status(400).send({ error: "Couldn't Delete" });
+    res.status(400).send({ error: "Não foi possível excluir o produto/serviço" });
   }
 });
 

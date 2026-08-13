@@ -3,14 +3,14 @@ const GenerateConfirmToken = require('../middleware/GenerateToken');
 const App = require('../app');
 const request = require('supertest');
 
-describe("Auth's Tests", () => {
+describe("Testes de Autenticação", () => {
   //TESTES DE UNIDADE
-  it('Testing Generate Token', async () => {
+  it('Testando a geração de token', async () => {
     let Token = GenerateConfirmToken();
     expect(Token).not.toBe(0);
   });
 
-  it('Testing how many repeated tokens the system found', async () => {
+  it('Testando quantos tokens repetidos o sistema encontrou', async () => {
     var y = [];
     var count = 0;
     for (var x = 0; x <= 100; x++) {
@@ -31,7 +31,7 @@ describe("Auth's Tests", () => {
     .substr(0, 7);
 
   //TESTES DE INTEGRAÇÃO
-  it('User Should Sign Up', async () => {
+  it('Usuário deve se cadastrar com sucesso', async () => {
     const response = await request(App)
       .post('/auth/register')
       .send({
@@ -44,7 +44,7 @@ describe("Auth's Tests", () => {
     expect(response.body.message).toBe('Cadastro bem-sucedido');
   });
 
-  it('User Should Sign In', async () => {
+  it('Usuário deve fazer login com sucesso', async () => {
     const response = await request(App)
       .post('/auth/authenticate')
       .send({

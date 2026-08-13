@@ -15,8 +15,8 @@ let day = getRandomInt(10, 28);
 let ScheduledHour = `${Hour}:${Minute}0`;
 let ScheduledDay = `20${Year}-04-${day}`;
 
-describe("Schedule's Tests", () => {
-  it('Should Create a New Register', async () => {
+describe("Testes de Agendamento", () => {
+  it('Deve Criar um Novo Registro', async () => {
     const result = await request(App)
       .post('/schedule/register')
       .send({
@@ -26,35 +26,35 @@ describe("Schedule's Tests", () => {
         userId: 1,
         ProSerId: [1, 2],
       });
-    expect(result.body.message).toBe('Success on Create');
+    expect(result.body.message).toBe('Sucesso ao criar registro');
   });
 
-  it('Should Find This Record', async () => {
+  it('Deve Encontrar Este Registro', async () => {
     const result = await request(App).post('/schedule/getOne').send({
       ScheduledDay: ScheduledDay,
       ScheduledHour: ScheduledHour,
       userId: 1,
     });
     expect(
-      result.body.message != 'Cannot Find any register at this time' ||
-        result.body.Error != "Couldn't Get the Data"
+      result.body.message != 'Não foi possível encontrar o registro' ||
+        result.body.Error != "Não foi possível obter os dados"
     ).toBeTruthy();
   });
 
-  it('Should Find All Records of the Day', async () => {
+  it('Deve Encontrar Todos os Registros do Dia', async () => {
     const result = await request(App).post('/schedule/getAllFromDay').send({
       ScheduledDay: ScheduledDay,
       userId: 1,
     });
-    expect(result.body.Error != "Couldn't Get the Data").toBeTruthy();
+    expect(result.body.Error != "Não foi possível obter os dados").toBeTruthy();
   });
 
-  it('Should Delete This Record', async () => {
+  it('Deve Deletar Este Registro', async () => {
     const result = await request(App).post('/schedule/delete/One').send({
       ScheduledDay: ScheduledDay,
       ScheduledHour: ScheduledHour,
       userId: 1,
     });
-    expect(result.body.message).toBe('Schedule deleted');
+    expect(result.body.message).toBe('Agendamento deletado');
   });
 });
