@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const database = require('../../config/database');
 
 const ProSer = require('../product');
-const SalesRecord = require('../salesRecord');
+const SalesRecord = require('../salesRecrd');
 
 const ProductSales = database.define('ProductSales', {
   ProductId: {
