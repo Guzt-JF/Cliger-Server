@@ -42,7 +42,7 @@ router.post('/GetAll', async (req, res) => {
     });
     if (result) {
       if (Object.values(result).length == 0) {
-        res.status(404).send({ message: 'Produto não encontrado' });
+        res.status(200).send({ message: 'Produto não encontrado' });
       } else {
         const data = result.map(function (item) {
           let id = item.id,

@@ -147,7 +147,7 @@ router.post('/delete/User', async (req, res) => {
 
     const result = await User.findOne({
       where: {
-        id: req.body.id,
+        id: req.body.userId,
       },
     });
     if (result) {
@@ -188,7 +188,7 @@ router.put('/update', async (req, res) => {
     }
     const result = await User.findOne({
       where: {
-        id: req.body.id,
+        id: req.body.userId,
       },
     });
     if (result) {

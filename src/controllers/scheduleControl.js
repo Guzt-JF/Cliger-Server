@@ -77,7 +77,7 @@ router.post('/getOne', async (req, res) => {
         res.json(DataEnd);
       }
     } else {
-      res.status(404).send({
+      res.status(200).send({
         message: 'Não foi possível encontrar registros para este horário',
       });
     }

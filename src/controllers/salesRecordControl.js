@@ -113,7 +113,7 @@ router.post('/GetOneProduct', async (req, res) => {
         res.status(200).send(Data);
       }
     } else {
-      res.status(404).send({ error: 'Não encontrado' });
+      res.status(200).send({ error: 'Não encontrado' });
     }
   } catch (err) {
     // console.error(err)

@@ -15,10 +15,10 @@ module.exports = async (req, res, next) => {
     where: {
       [Op.or]: [
         {
-          [Op.and]: [{ id: ID }, { userId: UserId }],
+          [Op.and]: [{ id: ID }, { userId: userId }],
         },
         {
-          [Op.and]: [{ ScheduledDay: Day }, { userId: UserId }],
+          [Op.and]: [{ ScheduledDay: Day }, { userId: userId }],
         },
       ],
     },
