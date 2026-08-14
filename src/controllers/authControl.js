@@ -62,25 +62,25 @@ router.post('/authenticate', async (req, res) => {
     const result = await User.findOne({
       where: { Email },
     });
-    if (result) {
-      bcrypt.compare(req.body.Password, result.Password, async (err, resp) => {
-        if (resp) {
-          res.status(200).send({
-            message: 'Sucesso no Login',
-            id: result.id,
-            UserName: result.UserName,
-            Email: result.Email,
-            BirthDate: result.BirthDate,
-            PhoneNumber: result.PhoneNumber,
-            ConfirmToken: result.ConfirmToken,
-          });
-        } else {
-          res.status(200).send({ Error: 'Senha Errada' });
-        }
-      });
-    } else {
+    if (!result) {
       res.status(200).send({ Error: 'E-Mail Errado' });
+      return;
     }
+    bcrypt.compare(req.body.Password, result.Password, async (err, resp) => {
+      if (!resp) {
+        res.status(200).send({ Error: 'Senha Errada' });
+        return;
+      }
+      res.status(200).send({
+        message: 'Sucesso no Login',
+        id: result.id,
+        UserName: result.UserName,
+        Email: result.Email,
+        BirthDate: result.BirthDate,
+        PhoneNumber: result.PhoneNumber,
+        ConfirmToken: result.ConfirmToken,
+      });
+    });
   } catch (err) {
     console.error(err);
     res.status(400).send({ Error: 'Autenticação falha' });
@@ -112,11 +112,12 @@ router.post('/GetUserByToken', async (req, res) => {
       if (result) {
         if (
           process.env.STAGE === 'demo' &&
-          result.Email !== 'test-mail@mail.com'
+          result.Email !== 'mail@test.com'
         ) {
           res
             .status(200)
             .send({ Error: 'usuário não permitido em demonstração' });
+          return;
         }
 
         res.status(200).send({
