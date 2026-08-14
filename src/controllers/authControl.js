@@ -12,7 +12,7 @@ const Product = require('../models/product');
 const ProductSales = require('../models/mtm/productSales');
 const productSchedule = require('../models/mtm/productSchedule');
 
-const GenerateConfirmToken = require('../middleware/generateToken');
+const GenerateConfirmToken = require('../utils/generateToken');
 const transporter = require('../modules/mail');
 const emailFilter = require('../middleware/filter');
 const generatePreLoadToken = require('../utils/generatePreLoadToken');
